@@ -1,13 +1,12 @@
 .PHONY: lint format
 
 help:
-	@echo "lint - check style with black, flake8, sort python with isort, and indent html"
-	@echo "format - enforce a consistent code style across the codebase and sort python files with isort"
+	@echo "lint - check style with black and ruff, sort python with ruff, and indent html"
+	@echo "format - enforce a consistent code style across the codebase and sort python files with ruff"
 
 lint-server:
 	black --target-version py37 --check --diff .
-	flake8
-	isort --check-only --diff .
+	ruff check .
 	curlylint --parse-only bakerydemo
 	git ls-files '*.html' | xargs djhtml --check
 
@@ -20,7 +19,7 @@ lint: lint-server lint-client
 
 format-server:
 	black --target-version py37 .
-	isort .
+	ruff check . --fix
 	git ls-files '*.html' | xargs djhtml -i
 
 format-client:
